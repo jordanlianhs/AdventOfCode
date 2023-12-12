@@ -1,0 +1,2 @@
+print(seed)
+# print(others)
