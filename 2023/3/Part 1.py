@@ -3,7 +3,7 @@ import os
 # Get the directory of the script
 script_dir = os.path.dirname(os.path.abspath(__file__))
 # Construct the full path to the file
-file_path = os.path.join(script_dir, "test.txt")
+file_path = os.path.join(script_dir, "day3.txt")
 
 # Now open the file
 try:
@@ -12,57 +12,36 @@ except FileNotFoundError:
     print(f"The file {file_path} does not exist.")
 
 
-"""
-Returns a list of tuples containing the surrouding positions of special characters in a file.
-"""
-positions = []
-# We get the indices of the surrounding characters that are special symbols which are not .
-for i, line in enumerate(file):
-    for j, char in enumerate(line):
-        if not char.isalnum() and char != ".":
-            positions.append((i, j))
-
-MAX_ROW = len(file)
-MAX_COL = len(file[0])
+G = [[c for c in line] for line in file]
+R = len(G)
+C = len(G[0])
 
 
-def check_char(i, j, positions):
+def check_char(r, c, G):
     """
     Returns True if the current character is adjacent to a special character.
     """
-    if (i-1, j-1) in positions or (i-1, j) in positions or (i-1, j+1) in positions or (i, j-1) in positions or (i, j+1) in positions or (i+1, j-1) in positions or (i+1, j) in positions or (i+1, j+1) in positions:
-        return True
-    else:
-        return False
+    for rr in [-1, 0, 1]:
+        for cc in [-1, 0, 1]:
+            if 0 <= r + rr < R and 0 <= c + cc < C:
+                ch = G[r + rr][c + cc]
+                if not ch.isdigit() and ch != ".":
+                    return True
 
 
-def find_number(j, line):
-    original_j = j
-    number = line[j]
-    if j-1 >= 0 and line[j-1].isnumeric():
-        while j-1 >= 0 and line[j-1].isnumeric():
-            number = line[j-1] + number
-            j -= 1
-    j = original_j
-    if j+1 <= MAX_COL and line[j+1].isnumeric():
-        while j+1 <= MAX_COL-1 and line[j+1].isnumeric():
-            number = number + line[j+1]
-            j += 1
-    return number
-
-
-result = 0
-recent = []
-for i, line in enumerate(file):
-    for j, char in enumerate(line):
-        if check_char(i, j, positions) and char.isnumeric():
-            # print(char)
-            # print(i,j)
-            # print(MAX_COL)
-            number = int(find_number(j, line))
-            if len(recent) == 0 or recent[-1] != number:
-                recent.append(number)
-            result += number
-print(recent)
-print(sum(recent))
-print(result)
+p1 = 0
+for r in range(R):
+    n = 0
+    has_part = False
+    for c in range(C + 1):  # Plus one so that we can check the last number at the end of a column
+        if c < C and G[r][c].isdigit():
+            n = n * 10 + int(G[r][c])
+            # Check the surrounding charactes
+            if not has_part:
+                has_part = check_char(r, c, G)
+        elif n > 0:
+            if has_part:
+                p1 += n
+            n = 0
+            has_part = False
+print(p1)

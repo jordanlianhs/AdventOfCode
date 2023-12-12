@@ -1,5 +1,4 @@
 import os
-from collections import defaultdict
 
 # Get the directory of the script
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -17,7 +16,6 @@ R = len(G)
 C = len(G[0])
 
 p1 = 0
-nums = defaultdict(list)
 for r in range(R):
     n = 0
     has_part = False
