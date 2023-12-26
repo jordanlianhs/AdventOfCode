@@ -1,0 +1,50 @@
+import os
+
+# Get the directory of the script
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Construct the full path to the file
+file_path = os.path.join(script_dir, "day12.txt")
+
+# Now open the file
+try:
+    file = open(file_path).read().strip().split("\n")
+except FileNotFoundError:
+    print(f"The file {file_path} does not exist.")
+
+cache = {}
+
+
+def count(cfg, nums):
+    if cfg == "":
+        return 1 if nums == () else 0
+
+    if nums == ():
+        return 0 if "#" in cfg else 1
+
+    key = (cfg, nums)
+    if key in cache:
+        return cache[key]
+
+    result = 0
+
+    if cfg[0] in ".?":
+        result += count(cfg[1:], nums)
+
+    if cfg[0] in "#?":
+        if nums[0] <= len(cfg) and "." not in cfg[:nums[0]] and (nums[0] == len(cfg) or cfg[nums[0]] != "#"):
+            result += count(cfg[nums[0]+1:], nums[1:])
+
+    cache[key] = result
+
+    return result
+
+
+total = 0
+for line in file:
+    cfg, nums = line.split()
+    cfg = cfg + ("?" + cfg) * 4
+    nums = tuple(map(int, nums.split(",")))
+    nums *= 5
+    total += count(cfg, nums)
+
+print(total)

@@ -13,8 +13,7 @@ except FileNotFoundError:
 
 
 empty_rows = [r for r, row in enumerate(grid) if all(ch == "." for ch in row)]
-empty_cols = [c for c, col in enumerate(
-    zip(*grid)) if all(ch == "." for ch in col)]
+empty_cols = [c for c, col in enumerate(zip(*grid)) if all(ch == "." for ch in col)]
 
 points = [(r, c) for r, row in enumerate(grid)for c, ch in enumerate(row) if ch == "#"]
 print(points)
