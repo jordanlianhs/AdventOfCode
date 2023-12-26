@@ -34,7 +34,7 @@ total = 0
 for line in file:
     cfg, nums = line.split()
     nums = tuple(map(int, nums.split(",")))
-    # print(nums)
+    print(nums)
     total += count(cfg,nums)
 
 print(total)
